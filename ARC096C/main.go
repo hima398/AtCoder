@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"sort"
 	"strconv"
 )
 
@@ -21,12 +20,13 @@ func nextString() string {
 	return sc.Text()
 }
 
-func Compare(A, B *Purchase) (*Purchase, *Purchase) {
-	if A.quantity < B.quantity {
-		return A, B
+func Min(x, y int) int {
+	if x < y {
+		return x
 	}
-	return B, A
+	return y
 }
+
 func Max(x, y int) int {
 	if x < y {
 		return y
@@ -34,9 +34,38 @@ func Max(x, y int) int {
 	return x
 }
 
-type Purchase struct {
-	price    int
-	quantity int
+func FullSearch(a, b, c, x, y int) int {
+	const N = 100000
+	result := 2147483647
+	for i := 0; i <= N; i++ {
+		total := i*2*c + Max(0, x-i)*a + Max(0, y-i)*b
+		if total < result {
+			result = total
+		}
+		if i > x+y {
+			break
+		}
+	}
+	return result
+}
+
+func O1(a, b, c, x, y int) int {
+	//ハーフを買わない
+	if a+b < 2*c {
+		return a*x + b*y
+	}
+
+	// ハーフのみで買う
+	halfOnly := c * Max(x, y) * 2
+	// 1種類ハーフ、A or Bの残りを買い足す
+	var mix int
+	if x > y {
+		mix = 2*c*y + a*(x-y)
+	} else {
+		mix = 2*c*x + b*(y-x)
+	}
+
+	return Min(halfOnly, mix)
 }
 
 func main() {
@@ -45,16 +74,7 @@ func main() {
 	sc.Split(bufio.ScanWords)
 
 	a, b, c, x, y := nextInt(), nextInt(), nextInt(), nextInt(), nextInt()
-	A := &Purchase{a, x}
-	B := &Purchase{b, y}
 
-	total := a*x + b*y
-	greater := c * Max(x, y) * 2
-	Less, Greater := Compare(A, B)
-	less := c*Less.quantity*2 + Greater.price*(Greater.quantity-Less.quantity)
-
-	prices := []int{total, greater, less}
-	sort.Ints(prices)
-
-	fmt.Println(prices[0])
+	//fmt.Println(FullSearch(a, b, c, x, y))
+	fmt.Println(O1(a, b, c, x, y))
 }
