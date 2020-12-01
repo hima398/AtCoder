@@ -60,21 +60,6 @@ var RPS = map[string]string{
 	"SR": "R", "SP": "S", "SS": "S",
 }
 
-func Battle(i, j, n int, s string) int {
-	a := s[i%n]
-	b := s[j%n]
-
-	result := (RPS[a] - RPS[b] + 3) % 3
-	if result == 0 || result == 2 {
-		//fmt.Printf("Winner %d\n", i)
-		return i
-	} else {
-		// result == 1
-		//fmt.Printf("Winner %d\n", j)
-		return j
-	}
-}
-
 func main() {
 	buf := make([]byte, 1024*1024)
 	sc.Buffer(buf, bufio.MaxScanTokenSize)
@@ -88,15 +73,14 @@ func main() {
 		return
 	}
 
-	//fmt.Println(winners)
-	for len(winners) > 1 {
-		var next []int
-		for i := 0; i < len(winners)-1; i += 2 {
-			winner := Battle(winners[i], winners[i+1], n, s)
-			next = append(next, winner)
+	winners := S
+	for K > 0 {
+		SS := winners + winners
+		winners = ""
+		for i := 0; i < N; i++ {
+			winners = winners + RPS[SS[2*i:2*i+2]]
 		}
-		winners = next
-		//fmt.Println(winners)
+		K--
 	}
-	fmt.Printf("%c\n", s[winners[0]%n])
+	fmt.Printf("%c\n", winners[0])
 }
