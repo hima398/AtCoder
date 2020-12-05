@@ -41,6 +41,17 @@ func Max(x, y int) int {
 	return x
 }
 
+func Gcd(x, y int) int {
+	if y == 0 {
+		return x
+	}
+	return Gcd(y, x%y)
+}
+
+func Lcm(x, y int) int {
+	return x * y / Gcd(x, y)
+}
+
 type Pos struct {
 	X int
 	Y int
@@ -52,25 +63,11 @@ func main() {
 	sc.Split(bufio.ScanWords)
 
 	N := nextInt()
-	Max := 10000000000000
-	var result int
-	if N%2 == 0 {
-		result = N + 1
-	} else {
-		result = N
+
+	A := make([]int, N+1)
+	A[2] = 2
+	for i := 3; i <= N; i++ {
+		A[i] = A[i-1] * (i / Gcd(A[i-1], i))
 	}
-	for result <= Max {
-		ok := true
-		for j := 2; j <= N; j++ {
-			ok = ok && result%j == 1
-			if !ok {
-				break
-			}
-		}
-		if ok {
-			break
-		}
-		result += 2
-	}
-	fmt.Println(result)
+	fmt.Println(A[N] + 1)
 }
