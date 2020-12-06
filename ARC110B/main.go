@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"strconv"
 )
@@ -61,4 +62,18 @@ func main() {
 	sc.Buffer(buf, bufio.MaxScanTokenSize)
 	sc.Split(bufio.ScanWords)
 
+	N := nextInt()
+	T := nextString()
+
+	LenS := 10000000000
+
+	if N == 1 {
+		if T == "1" {
+			fmt.Println(2 * LenS)
+			return
+		} else {
+			fmt.Println(0)
+			return
+		}
+	}
 }
