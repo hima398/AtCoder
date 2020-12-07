@@ -76,4 +76,10 @@ func main() {
 			return
 		}
 	}
+
+	if N == 2 {
+		fmt.Println(LenS)
+		return
+	}
+
 }
