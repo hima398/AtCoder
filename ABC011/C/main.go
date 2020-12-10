@@ -57,24 +57,49 @@ type Pos struct {
 	Y int
 }
 
+func DP(N int, NG [301]bool) string {
+
+	dp := make([]int, N+1)
+	for i := 0; i <= N; i++ {
+		dp[i] = 2147483647
+	}
+	dp[N] = 0
+	for i := N; i >= 0; i-- {
+		if NG[i] {
+			continue
+		}
+		for j := 1; j <= 3; j++ {
+			if i-j < 0 {
+				break
+			}
+			dp[i-j] = Min(dp[i]+1, dp[i-j])
+		}
+	}
+	//fmt.Println(dp[0])
+	if dp[0] <= 100 {
+		return "YES"
+	} else {
+		return "NO"
+	}
+}
+
 func main() {
 	buf := make([]byte, 1024*1024)
 	sc.Buffer(buf, bufio.MaxScanTokenSize)
 	sc.Split(bufio.ScanWords)
 
 	N := nextInt()
-	const NUM_NG = 3
-	NG := make([]int, NUM_NG)
-	for i := 0; i < NUM_NG; i++ {
-		NG[i] = nextInt()
+
+	var NG [301]bool
+	const NumNg = 3
+	for i := 0; i < NumNg; i++ {
+		ng := nextInt()
+		if N == ng {
+			fmt.Println("NO")
+			return
+		}
+		NG[ng] = true
 	}
 
-	for i := 0; i < 100; i++ {
-
-	}
-	if N > 0 {
-		fmt.Println("NO")
-	} else {
-		fmt.Println("YES")
-	}
+	fmt.Println(DP(N, NG))
 }
