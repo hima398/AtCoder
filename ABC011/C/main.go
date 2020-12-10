@@ -57,6 +57,26 @@ type Pos struct {
 	Y int
 }
 
+func GreedyAlgorithm(N int, NG [301]bool) string {
+	for i := 0; i < 100; i++ {
+		if !NG[Max(N-3, 0)] {
+			N -= 3
+		} else if !NG[Max(N-2, 0)] {
+			N -= 2
+		} else if !NG[Max(N-1, 0)] {
+			N -= 1
+		} else {
+			// デクリメントできない
+			return "NO"
+		}
+		if N <= 0 {
+			return "YES"
+		}
+	}
+	// N > 0
+	return "NO"
+}
+
 func DP(N int, NG [301]bool) string {
 
 	dp := make([]int, N+1)
@@ -101,5 +121,6 @@ func main() {
 		NG[ng] = true
 	}
 
-	fmt.Println(DP(N, NG))
+	//fmt.Println(DP(N, NG))
+	fmt.Println(GreedyAlgorithm(N, NG))
 }
