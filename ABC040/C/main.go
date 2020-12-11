@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"strconv"
 )
@@ -63,15 +64,21 @@ func main() {
 
 	N := nextInt()
 
-	Pilar := make([]int, N)
+	// Pilar
+	P := make([]int, N)
 	for i := 0; i < N; i++ {
-		Pilar[i] = nextInt()
+		P[i] = nextInt()
 	}
 
 	dp := make([]int, N)
 	dp[0] = 0
-	for i := 0; i < N; i++ {
-
+	dp[1] = dp[0] + Abs(P[1]-P[0])
+	if N == 2 {
+		fmt.Println(dp[1])
+		return
 	}
-
+	for i := 2; i < N; i++ {
+		dp[i] = Min(dp[i-1]+Abs(P[i]-P[i-1]), dp[i-2]+Abs(P[i]-P[i-2]))
+	}
+	fmt.Println(dp[N-1])
 }
