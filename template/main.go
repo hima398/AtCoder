@@ -51,6 +51,29 @@ func Lcm(x, y int) int {
 	return x * y / Gcd(x, y)
 }
 
+func Permutation(N, K int) int {
+	v := 1
+	if 0 < K && K <= N {
+		for i := 0; i < K; i++ {
+			v *= (N - i)
+		}
+	} else if K > N {
+		v = 0
+	}
+	return v
+}
+
+func Factional(N int) int {
+	return Permutation(N, N-1)
+}
+
+func Combination(N, K int) int {
+	if K == 1 {
+		return N
+	}
+	return Combination(N, K-1) * (N + 1 - K) / K
+}
+
 type Pos struct {
 	X int
 	Y int
