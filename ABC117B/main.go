@@ -2,7 +2,7 @@ package main
 
 import (
 	"bufio"
-	"errors"
+	"fmt"
 	"os"
 	"strconv"
 )
@@ -75,14 +75,6 @@ func Combination(N, K int) int {
 	return Combination(N, K-1) * (N + 1 - K) / K
 }
 
-func DivideSlice(A []int, K int) ([]int, []int, error) {
-
-	if len(A) < K {
-		return nil, nil, errors.New("")
-	}
-	return A[:K+1], A[K:], nil
-}
-
 type Pos struct {
 	X int
 	Y int
@@ -93,4 +85,20 @@ func main() {
 	sc.Buffer(buf, bufio.MaxScanTokenSize)
 	sc.Split(bufio.ScanWords)
 
+	N := nextInt()
+	//L := make([]int, N)
+	var max int
+	var sum int
+	for i := 0; i < N; i++ {
+		L := nextInt()
+		max = Max(L, max)
+		sum += L
+	}
+	if max < sum-max {
+		fmt.Println("Yes")
+		return
+	} else {
+		fmt.Println("No")
+		return
+	}
 }
