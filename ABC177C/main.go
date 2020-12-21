@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"os"
 	"strconv"
 )
@@ -95,4 +96,19 @@ func main() {
 	sc.Buffer(buf, bufio.MaxScanTokenSize)
 	sc.Split(bufio.ScanWords)
 
+	N := nextInt()
+	A := make([]int, N+1)
+	S := make([]int, N+1)
+	for i := 1; i <= N; i++ {
+		A[i] = nextInt()
+		S[i] = (S[i-1] + A[i]) % Mod
+	}
+
+	fmt.Println(S)
+	ans := 0
+	for i := 1; i < N; i++ {
+		j := i
+		ans = (ans + (A[i] * ((S[N] - S[j]) % Mod) % Mod)) % Mod
+	}
+	fmt.Println(ans)
 }

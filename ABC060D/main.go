@@ -3,11 +3,10 @@ package main
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"os"
 	"strconv"
 )
-
-const Mod = 1000000000
 
 var sc = bufio.NewScanner(os.Stdin)
 
@@ -90,9 +89,45 @@ type Pos struct {
 	Y int
 }
 
+type Item struct {
+	W int
+	V int
+}
+
+func Stupid(N, W int, A []int) int {
+
+	return 0
+}
+
 func main() {
 	buf := make([]byte, 1024*1024)
 	sc.Buffer(buf, bufio.MaxScanTokenSize)
 	sc.Split(bufio.ScanWords)
+
+	N := nextInt()
+	W := nextInt()
+	//fmt.Println(N, W)
+
+	A := make([]Item, N+1)
+	for i := 0; i < N; i++ {
+		A[i].W = nextInt()
+		A[i].V = nextInt()
+	}
+	// N番目の品物の中から重さWを超えないように選んだ価値の総和の最大
+	DP := make([][]int, N+1)
+	for i := 0; i < N+1; i++ {
+		DP[i] = make([]int, W+1)
+	}
+	for j := A[0].W; j <= A[0].W+3; j++ {
+		for i := 0; i < N; i++ {
+			if A[i].W <= j {
+				DP[i+1][j] = Max(DP[i][W-A[i].W]+A[i].V, DP[i][j])
+			} else {
+				DP[i+1][j] = DP[i][j]
+			}
+		}
+	}
+	fmt.Println(DP)
+	fmt.Println(DP[N][A[0].W+3])
 
 }

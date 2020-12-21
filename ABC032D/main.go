@@ -7,8 +7,6 @@ import (
 	"strconv"
 )
 
-const Mod = 1000000000
-
 var sc = bufio.NewScanner(os.Stdin)
 
 func nextInt() int {
@@ -90,9 +88,20 @@ type Pos struct {
 	Y int
 }
 
+type Item struct {
+	W int
+	V int
+}
+
 func main() {
 	buf := make([]byte, 1024*1024)
 	sc.Buffer(buf, bufio.MaxScanTokenSize)
 	sc.Split(bufio.ScanWords)
 
+	N, W := nextInt(), nextInt()
+	A := make([]Item, N)
+	for _, v := range A {
+		v.W = nextInt()
+		v.V = nextInt()
+	}
 }

@@ -3,11 +3,10 @@ package main
 import (
 	"bufio"
 	"errors"
+	"fmt"
 	"os"
 	"strconv"
 )
-
-const Mod = 1000000000
 
 var sc = bufio.NewScanner(os.Stdin)
 
@@ -95,4 +94,45 @@ func main() {
 	sc.Buffer(buf, bufio.MaxScanTokenSize)
 	sc.Split(bufio.ScanWords)
 
+	N, M, K := nextInt(), nextInt(), nextInt()
+	A := make([]int, N)
+	B := make([]int, M)
+
+	SA := make([]int, N+1)
+	SB := make([]int, M+1)
+
+	for i := 0; i < N; i++ {
+		A[i] = nextInt()
+		SA[i+1] = SA[i] + A[i]
+		//		if SA[i] > K {
+		//			break
+		//		}
+	}
+	for i := 0; i < M; i++ {
+		B[i] = nextInt()
+		SB[i+1] = SB[i] + B[i]
+		//		if SB[i] > K {
+		//			break
+		//		}
+	}
+
+	//if K > SA[N]+SB[M] {
+	//	fmt.Println(N + M)
+	//	return
+	//}
+
+	ans := 0
+	j := M
+	for i := 0; i <= N; i++ {
+		if SA[i] > K {
+			break
+		}
+		KA := K - SA[i]
+		for SB[j] > KA {
+			j--
+		}
+		ans = Max(ans, i+j)
+	}
+
+	fmt.Println(ans)
 }
