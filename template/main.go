@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-const Mod = 1000000000
+const Mod = 1000000007
 
 var sc = bufio.NewScanner(os.Stdin)
 

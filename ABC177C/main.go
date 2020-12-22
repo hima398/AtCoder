@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-const Mod = 1000000000
+const Mod = 1000000007
 
 var sc = bufio.NewScanner(os.Stdin)
 
@@ -103,12 +103,16 @@ func main() {
 		A[i] = nextInt()
 		S[i] = (S[i-1] + A[i]) % Mod
 	}
-
-	fmt.Println(S)
+	//fmt.Println(A)
+	//fmt.Println(S)
 	ans := 0
 	for i := 1; i < N; i++ {
-		j := i
-		ans = (ans + (A[i] * ((S[N] - S[j]) % Mod) % Mod)) % Mod
+		sum := (S[N] - S[i]) % Mod
+		if sum < 0 {
+			sum += Mod
+		}
+		ans += A[i] * sum
+		ans %= Mod
 	}
 	fmt.Println(ans)
 }
