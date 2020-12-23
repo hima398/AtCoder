@@ -101,16 +101,16 @@ func main() {
 	S := make([]int, N+1)
 	for i := 1; i <= N; i++ {
 		A[i] = nextInt()
-		S[i] = (S[i-1] + A[i]) % Mod
+	}
+	S[N] = 0
+	for i := N; i >= 1; i-- {
+		S[i-1] = (S[i] + A[i]) % Mod
 	}
 	//fmt.Println(A)
 	//fmt.Println(S)
 	ans := 0
 	for i := 1; i < N; i++ {
-		sum := (S[N] - S[i]) % Mod
-		if sum < 0 {
-			sum += Mod
-		}
+		sum := S[i] % Mod
 		ans += A[i] * sum
 		ans %= Mod
 	}
