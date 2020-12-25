@@ -91,14 +91,7 @@ type Pos struct {
 	Y int
 }
 
-func main() {
-	buf := make([]byte, 1024*1024)
-	sc.Buffer(buf, bufio.MaxScanTokenSize)
-	sc.Split(bufio.ScanWords)
-
-	S := nextString()
-	//N := len(S)
-
+func SolveStupidly(S string) int {
 	ans := 0
 	for i, _ := range S {
 		for j, _ := range S {
@@ -122,6 +115,28 @@ func main() {
 			}
 		}
 	}
-	fmt.Println(ans)
+	return ans
+}
+
+func Solve(S string) int {
+	ans := 0
+	for i := 1; i <= len(S); i++ {
+		if S[i-1] == 'U' {
+			ans += (len(S) - 1) + (i - 1)
+		} else {
+			//S[i-1] == 'D'
+			ans += (len(S) - 1) + (len(S) - i)
+		}
+	}
+	return ans
+}
+
+func main() {
+	buf := make([]byte, 1024*1024)
+	sc.Buffer(buf, bufio.MaxScanTokenSize)
+	sc.Split(bufio.ScanWords)
+
+	S := nextString()
+	fmt.Println(Solve(S))
 
 }
