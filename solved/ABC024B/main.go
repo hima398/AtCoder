@@ -110,11 +110,29 @@ func SolveImos(N, T int) int {
 	return ans
 }
 
+func Solve(N, T int) int {
+	ans := 0
+	Prev := nextInt()
+	for i := 1; i < N; i++ {
+		A := nextInt()
+		if Prev+T < A {
+			// Prev < Prev + T < A
+			ans += T
+		} else {
+			// Prev < A < Prev + T
+			ans += A - Prev
+		}
+		Prev = A
+	}
+	ans += T
+	return ans
+}
+
 func main() {
 	buf := make([]byte, 1024*1024)
 	sc.Buffer(buf, bufio.MaxScanTokenSize)
 	sc.Split(bufio.ScanWords)
 
 	N, T := nextInt(), nextInt()
-	fmt.Println(SolveImos(N, T))
+	fmt.Println(Solve(N, T))
 }
