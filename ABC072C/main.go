@@ -46,7 +46,12 @@ type Pos struct {
 	Y int
 }
 
-func Solve(N int) int {
+func main() {
+	buf := make([]byte, 1024*1024)
+	sc.Buffer(buf, bufio.MaxScanTokenSize)
+	sc.Split(bufio.ScanWords)
+
+	N := nextInt()
 	a := make([]int, N)
 	m := make(map[int]int)
 
@@ -66,14 +71,5 @@ func Solve(N int) int {
 			}
 		}
 	}
-	return result
-}
-
-func main() {
-	buf := make([]byte, 1024*1024)
-	sc.Buffer(buf, bufio.MaxScanTokenSize)
-	sc.Split(bufio.ScanWords)
-
-	N := nextInt()
-	fmt.Println(Solve(N))
+	fmt.Println(result)
 }
