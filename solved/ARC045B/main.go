@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"errors"
-	"fmt"
 	"os"
 	"strconv"
 )
@@ -106,20 +105,22 @@ func main() {
 		Table[S[i]]++
 		Table[T[i]+1]--
 	}
-	fmt.Println(Table)
+	//fmt.Println(Table)
+	PS := make([]int, N+1)
 	for i := 0; i < N; i++ {
 		Table[i+1] += Table[i]
+		if Table[i+1] == 1 {
+			PS[i+1] = PS[i] + Table[i+1]
+		} else {
+			PS[i+1] = PS[i]
+		}
 	}
-	fmt.Println(Table)
+	//fmt.Println(Table)
+	//fmt.Println(PS)
 	var ans []int
 	for i := 0; i < M; i++ {
-		ok := true
-		for j := S[i]; j <= T[i]; j++ {
-			if Table[j] <= 1 {
-				ok = false
-				break
-			}
-		}
+		// S->Tにかけて水平かをチェックする
+		ok := PS[T[i]]-PS[S[i]-1] == 0
 		if ok {
 			ans = append(ans, i+1)
 		}
