@@ -91,14 +91,8 @@ type Pos struct {
 	Y int
 }
 
-func main() {
-	buf := make([]byte, 1024*1024)
-	sc.Buffer(buf, bufio.MaxScanTokenSize)
-	sc.Split(bufio.ScanWords)
-
-	N, C := nextInt(), nextInt()
-	//var Table [31][200004]int
-	//imos := make([]int, 100002)
+func SolveCountChannel(N, C int) int {
+	const debug = false
 	var imos [31][100002]int
 	channels := make([]int, 100002)
 	max := 0
@@ -116,12 +110,17 @@ func main() {
 			if imos[i][j+1] > 0 {
 				channels[j+1] |= 1 << i
 			}
-			//fmt.Printf("%d, ", imos[i][j+1])
-			//			ans = Max(ans, imos[i][j+1])
+			if debug {
+				fmt.Printf("%d, ", imos[i][j+1])
+			}
 		}
-		//fmt.Println("")
+		if debug {
+			fmt.Println("")
+		}
 	}
-	//fmt.Println("")
+	if debug {
+		fmt.Println("")
+	}
 	ans := 0
 	for i := 1; i <= max; i++ {
 		a := 0
@@ -129,8 +128,22 @@ func main() {
 			a += channels[i] >> j & 1
 		}
 		ans = Max(ans, a)
-		//fmt.Printf("%d, ", channels[i])
+		if debug {
+			fmt.Printf("%d, ", channels[i])
+		}
 	}
-	//fmt.Println("")
-	fmt.Println(ans)
+	if debug {
+		fmt.Println("")
+	}
+	return ans
+}
+
+func main() {
+	buf := make([]byte, 1024*1024)
+	sc.Buffer(buf, bufio.MaxScanTokenSize)
+	sc.Split(bufio.ScanWords)
+
+	N, C := nextInt(), nextInt()
+	fmt.Println(SolveCountChannel(N, C))
+	//fmt.Println(SolveOptimizeInput(N, C))
 }
