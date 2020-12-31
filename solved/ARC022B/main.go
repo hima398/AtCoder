@@ -8,6 +8,8 @@ import (
 	"strconv"
 )
 
+const Mod = 1000000007
+
 var sc = bufio.NewScanner(os.Stdin)
 
 func nextInt() int {
@@ -89,44 +91,53 @@ type Pos struct {
 	Y int
 }
 
-func SolvePrefixSum(N, M, K int) int {
-	A := make([]int, N)
-	B := make([]int, M)
-
-	SA := make([]int, N+1)
-	SB := make([]int, M+1)
-
-	for i := 0; i < N; i++ {
-		A[i] = nextInt()
-		SA[i+1] = SA[i] + A[i]
-		//		if SA[i] > K {
-		//			break
-		//		}
+func SolveStupidly(n int) int {
+	if n == 1 {
+		return 1
 	}
-	for i := 0; i < M; i++ {
-		B[i] = nextInt()
-		SB[i+1] = SB[i] + B[i]
-		//		if SB[i] > K {
-		//			break
-		//		}
+	a := make([]int, n)
+	for i := 0; i < n; i++ {
+		a[i] = nextInt()
 	}
-
-	//if K > SA[N]+SB[M] {
-	//	fmt.Println(N + M)
-	//	return
-	//}
-
 	ans := 0
-	j := M
-	for i := 0; i <= N; i++ {
-		if SA[i] > K {
-			break
+	for i := 0; i < n; i++ {
+		m := make(map[int]bool)
+		//m[a[i]] = true
+		for j := i; j < n; j++ {
+			if m[a[j]] {
+				//fmt.Println(m)
+				ans = Max(ans, j-i)
+				break
+			} else if j == n-1 {
+				ans = Max(ans, j-i+1)
+				break
+			}
+			m[a[j]] = true
 		}
-		KA := K - SA[i]
-		for SB[j] > KA {
-			j--
+	}
+
+	return ans
+}
+
+func SolveTwoPoint(n int) int {
+	a := make([]int, n)
+	for i := 0; i < n; i++ {
+		a[i] = nextInt()
+	}
+
+	r := 0
+	ans := 0
+	m := make(map[int]bool)
+	for l := 0; l < n; l++ {
+		for r < n {
+			if m[a[r]] {
+				break
+			}
+			m[a[r]] = true
+			r++
 		}
-		ans = Max(ans, i+j)
+		ans = Max(ans, r-l)
+		delete(m, a[l])
 	}
 	return ans
 }
@@ -136,7 +147,8 @@ func main() {
 	sc.Buffer(buf, bufio.MaxScanTokenSize)
 	sc.Split(bufio.ScanWords)
 
-	N, M, K := nextInt(), nextInt(), nextInt()
+	n := nextInt()
 
-	fmt.Println(SolvePrefixSum(N, M, K))
+	//fmt.Println(SolveStupidly(n))
+	fmt.Println(SolveTwoPoint(n))
 }
