@@ -8,6 +8,8 @@ import (
 	"strconv"
 )
 
+const Mod = 1000000007
+
 var sc = bufio.NewScanner(os.Stdin)
 
 func nextInt() int {
@@ -89,25 +91,12 @@ type Pos struct {
 	Y int
 }
 
-// しゃくとり法での解答
-func SolveTwoPointer(N int) int {
-	A := make([]int, N)
-	for i := 0; i < N; i++ {
-		A[i] = nextInt()
-	}
+func Eval(l, r int, s, x []int) bool {
 
-	ans := 0
-	r := 0
-	for l := 0; l < N; l++ {
-		for r < N-1 && (A[r] < A[r+1]) {
-			r++
-		}
-		ans += (r - l + 1)
-		if l == r {
-			r++
-		}
-	}
-	return ans
+	sum := s[r] - s[l-1]
+	xor := x[r] ^ x[l-1]
+	//fmt.Printf("sum = %d, xor = %d\n", sum, xor)
+	return sum == xor
 }
 
 func main() {
@@ -115,6 +104,26 @@ func main() {
 	sc.Buffer(buf, bufio.MaxScanTokenSize)
 	sc.Split(bufio.ScanWords)
 
-	N := nextInt()
-	fmt.Println(SolvePrefixSum(N))
+	n := nextInt()
+	a := make([]int, n+1)
+	s := make([]int, n+1)
+	x := make([]int, n+1)
+	for i := 1; i <= n; i++ {
+		a[i] = nextInt()
+		s[i] += s[i-1] + a[i]
+		x[i] ^= x[i-1] ^ a[i]
+	}
+	ans := 0
+	r := 1
+	for l := 1; l <= n; l++ {
+		for r <= n && Eval(l, r, s, x) {
+			//fmt.Println(l, r)
+			r++
+		}
+		ans += r - l
+		if l == r {
+			r++
+		}
+	}
+	fmt.Println(ans)
 }
