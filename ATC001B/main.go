@@ -154,9 +154,28 @@ func Print(u *UnionFind) {
 	fmt.Println(u.rank)
 }
 
+func Eval(a, b int, u *UnionFind) string {
+	if u.ExistSameUnion(a, b) {
+		return "Yes"
+	} else {
+		return "No"
+	}
+}
+
 func main() {
 	buf := make([]byte, 1024*1024)
 	sc.Buffer(buf, bufio.MaxScanTokenSize)
 	sc.Split(bufio.ScanWords)
 
+	n, q := nextInt(), nextInt()
+	u := NewUnionFind(n)
+
+	for i := 0; i < q; i++ {
+		p, a, b := nextInt(), nextInt(), nextInt()
+		if p == 0 {
+			u.Unite(a, b)
+		} else if p == 1 {
+			fmt.Println(Eval(a, b, u))
+		}
+	}
 }
