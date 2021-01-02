@@ -94,6 +94,7 @@ type Pos struct {
 type UnionFind struct {
 	par  []int // parent numbers
 	rank []int // height of tree
+	path []int
 }
 
 func NewUnionFind(n int) *UnionFind {
@@ -104,35 +105,39 @@ func NewUnionFind(n int) *UnionFind {
 	// for accessing index without minus 1
 	u.par = make([]int, n+1)
 	u.rank = make([]int, n+1)
+	u.path = make([]int, n+1)
 	for i := 0; i <= n; i++ {
 		u.par[i] = i
 		u.rank[i] = 0
+		u.path[i] = 0
 	}
 	return u
 }
 
-func (this *UnionFind) Find(x int) int {
+func (this *UnionFind) GetRoot(x int) int {
 	if this.par[x] == x {
 		return x
 	} else {
 		// compress path
-		// ex. Find(4)
+		// ex. GetRoot(4)
 		// 1 - 2 - 3 - 4
 		// 1 - 2
 		//  L-3
 		//  L 4
-		this.par[x] = this.Find(this.par[x])
+		this.par[x] = this.GetRoot(this.par[x])
 		return this.par[x]
 	}
 }
 
 func (this *UnionFind) ExistSameUnion(x, y int) bool {
-	return this.Find(x) == this.Find(y)
+	return this.GetRoot(x) == this.GetRoot(y)
 }
 
 func (this *UnionFind) Unite(x, y int) {
-	x = this.Find(x)
-	y = this.Find(y)
+	this.path[x]++
+	this.path[y]++
+	x = this.GetRoot(x)
+	y = this.GetRoot(y)
 	if x == y {
 		return
 	}
@@ -152,6 +157,7 @@ func PrintUnionFind(u *UnionFind) {
 	// for debuging. not optimize.
 	fmt.Println(u.par)
 	fmt.Println(u.rank)
+	fmt.Println(u.path)
 }
 
 func main() {
@@ -159,4 +165,19 @@ func main() {
 	sc.Buffer(buf, bufio.MaxScanTokenSize)
 	sc.Split(bufio.ScanWords)
 
+	// 深さ優先探索のテーマでやってみる
+	n, m := nextInt(), nextInt()
+	u := NewUnionFind(n)
+	for i := 0; i < m; i++ {
+		a, b := nextInt(), nextInt()
+		u.Unite(a, b)
+	}
+	PrintUnionFind(u)
+	ans := 0
+	for i := 1; i <= n; i++ {
+		if u.path[i] != 0 && u.path[i] < 3 {
+			ans++
+		}
+	}
+	fmt.Println(ans)
 }
