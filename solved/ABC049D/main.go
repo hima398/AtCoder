@@ -131,19 +131,19 @@ func (this *UnionFind) ExistSameUnion(x, y int) bool {
 }
 
 func (this *UnionFind) Unite(x, y int) {
-	x = this.Find(x)
-	y = this.Find(y)
-	if x == y {
+	rootX := this.Find(x)
+	rootY := this.Find(y)
+	if rootX == rootY {
 		return
 	}
-	// raink
-	if this.rank[x] < this.rank[y] {
-		this.par[x] = y
+	// rank
+	if this.rank[rootX] < this.rank[rootY] {
+		this.par[rootX] = rootY
 	} else {
 		// this.rank[x] >= this.rank[y]
-		this.par[y] = x
-		if this.rank[x] == this.rank[y] {
-			this.rank[x]++
+		this.par[rootY] = rootX
+		if this.rank[rootX] == this.rank[rootY] {
+			this.rank[rootX]++
 		}
 	}
 }
@@ -152,6 +152,10 @@ func PrintUnionFind(u *UnionFind) {
 	// for debuging. not optimize.
 	fmt.Println(u.par)
 	fmt.Println(u.rank)
+}
+
+type Pair struct {
+	a, b int
 }
 
 func main() {
@@ -170,7 +174,19 @@ func main() {
 		r, s := nextInt(), nextInt()
 		u2.Unite(r, s)
 	}
-	fmt.Println(u1)
-	fmt.Println(u2)
-
+	//fmt.Println(u1)
+	//fmt.Println(u2)
+	m := make(map[Pair]int)
+	for i := 1; i <= n; i++ {
+		m[Pair{u1.Find(i), u2.Find(i)}]++
+	}
+	/*
+		for k, v := range m {
+			fmt.Println(k, v)
+		}
+	*/
+	for i := 1; i <= n; i++ {
+		fmt.Printf("%d ", m[Pair{u1.Find(i), u2.Find(i)}])
+	}
+	fmt.Println("")
 }
