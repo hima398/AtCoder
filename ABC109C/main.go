@@ -160,23 +160,20 @@ func main() {
 	sc.Buffer(buf, bufio.MaxScanTokenSize)
 	sc.Split(bufio.ScanWords)
 
-	n, m := nextInt(), nextInt()
-	x := make([]int, m)
-	for i := 0; i < m; i++ {
+	n := nextInt()
+	x := make([]int, n+1)
+	x[0] = nextInt() // Xを入力
+	for i := 1; i <= n; i++ {
 		x[i] = nextInt()
 	}
 	sort.Ints(x)
-	// m=1要確認
-	y := make([]int, m-1)
-	for i := 0; i < m-1; i++ {
-		y[i] = x[i+1] - x[i]
+	d := make([]int, n)
+	for i := 0; i < n; i++ {
+		d[i] = x[i+1] - x[i]
 	}
-	//fmt.Println(n, x, y)
-	sort.Ints(y)
-	ans := 0
-	l := Max(len(y)-n+1, 0)
-	for i := 0; i < l; i++ {
-		ans += y[i]
+	ans := d[0]
+	for i := 1; i < n; i++ {
+		ans = Gcd(ans, d[i])
 	}
 	fmt.Println(ans)
 }

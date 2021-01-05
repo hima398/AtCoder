@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"strconv"
 )
@@ -12,18 +13,6 @@ func nextInt() int {
 	sc.Scan()
 	i, _ := strconv.Atoi(sc.Text())
 	return i
-}
-
-func nextString() string {
-	sc.Scan()
-	return sc.Text()
-}
-
-func Abs(x int) int {
-	if x < 0 {
-		return -x
-	}
-	return x
 }
 
 func Min(x, y int) int {
@@ -40,43 +29,50 @@ func Max(x, y int) int {
 	return x
 }
 
-func Gcd(x, y int) int {
-	if y == 0 {
-		return x
+func SolveLoop(h []int) int {
+	prev := 0
+	ans := 0
+	for _, v := range h {
+		ans += Max(v-prev, 0)
+		prev = v
 	}
-	return Gcd(y, x%y)
+	return ans
 }
 
-func Lcm(x, y int) int {
-	return x * y / Gcd(x, y)
-}
-
-func Permutation(N, K int) int {
-	v := 1
-	if 0 < K && K <= N {
-		for i := 0; i < K; i++ {
-			v *= (N - i)
+func SolveRecursive(h []int) int {
+	//fmt.Println(h)
+	if len(h) == 0 {
+		return 0
+	}
+	if len(h) == 1 {
+		return h[0]
+	}
+	min := h[0]
+	// 最小を求めるついでに全て同じかを調べておく
+	IsSame := true
+	for i := 1; i < len(h); i++ {
+		min = Min(min, h[i])
+		IsSame = IsSame && (h[i] == h[i-1])
+	}
+	if IsSame {
+		return h[0]
+	}
+	ans := min
+	m := -1
+	for i := 0; i < len(h); i++ {
+		h[i] -= min
+		if m == -1 && h[i] == 0 {
+			m = i
 		}
-	} else if K > N {
-		v = 0
 	}
-	return v
-}
 
-func Factional(N int) int {
-	return Permutation(N, N-1)
-}
-
-func Combination(N, K int) int {
-	if K == 1 {
-		return N
+	if m >= 0 {
+		// 途中に0がない
+		ans += SolveRecursive(h[:m]) + SolveRecursive(h[m+1:])
+		return ans
+	} else {
+		return ans
 	}
-	return Combination(N, K-1) * (N + 1 - K) / K
-}
-
-type Pos struct {
-	X int
-	Y int
 }
 
 func main() {
@@ -84,13 +80,13 @@ func main() {
 	sc.Buffer(buf, bufio.MaxScanTokenSize)
 	sc.Split(bufio.ScanWords)
 
-	N := nextInt()
-	h := make([]int, N)
+	n := nextInt()
+	h := make([]int, n)
 
-	var max int
-	for i := 0; i < N; i++ {
+	for i := 0; i < n; i++ {
 		h[i] = nextInt()
-		max = Max(max, h[i])
 	}
+	//fmt.Println(SolveRecursive(h))
+	fmt.Println(SolveLoop(h))
 
 }
