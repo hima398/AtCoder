@@ -155,12 +155,7 @@ func PrintUnionFind(u *UnionFind) {
 	fmt.Println(u.rank)
 }
 
-func main() {
-	buf := make([]byte, 1024*1024)
-	sc.Buffer(buf, bufio.MaxScanTokenSize)
-	sc.Split(bufio.ScanWords)
-
-	n := nextInt()
+func Solve(n int) int {
 	x := make([]int, n+1)
 	x[0] = nextInt() // Xを入力
 	for i := 1; i <= n; i++ {
@@ -175,5 +170,28 @@ func main() {
 	for i := 1; i < n; i++ {
 		ans = Gcd(ans, d[i])
 	}
-	fmt.Println(ans)
+	return ans
+}
+
+func SolveCommentary(n int) int {
+	x := make([]int, n+1)
+	x[0] = nextInt()
+	for i := 1; i <= n; i++ {
+		x[i] = nextInt()
+	}
+	ans := Abs(x[0] - x[1])
+	for i := 2; i <= n; i++ {
+		ans = Gcd(ans, Abs(x[0]-x[i]))
+	}
+	return ans
+}
+
+func main() {
+	buf := make([]byte, 1024*1024)
+	sc.Buffer(buf, bufio.MaxScanTokenSize)
+	sc.Split(bufio.ScanWords)
+
+	n := nextInt()
+	//fmt.Println(Solve(n))
+	fmt.Println(SolveCommentary(n))
 }
