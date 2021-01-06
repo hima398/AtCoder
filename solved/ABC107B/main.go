@@ -154,12 +154,37 @@ func PrintUnionFind(u *UnionFind) {
 	fmt.Println(u.rank)
 }
 
-func main() {
-	buf := make([]byte, 1024*1024)
-	sc.Buffer(buf, bufio.MaxScanTokenSize)
-	sc.Split(bufio.ScanWords)
+func SolveCommentary(h, w int) {
+	var a [100][100]byte
+	var row [100]bool
+	var col [100]bool
 
-	h, w := nextInt(), nextInt()
+	for i := 0; i < h; i++ {
+		s := nextString()
+		for j := 0; j < w; j++ {
+			a[i][j] = s[j]
+			if a[i][j] == '#' {
+				row[i] = true
+				col[j] = true
+			}
+		}
+	}
+	for i := 0; i < h; i++ {
+		if row[i] {
+			for j := 0; j < w; j++ {
+				if col[j] {
+					fmt.Printf(string(a[i][j]))
+				}
+			}
+			if row[i] {
+				fmt.Println("")
+			}
+		}
+	}
+
+}
+
+func Solve(h, w int) {
 	a := make([][]int, h)
 	si := make([]int, h)
 	sj := make([]int, w)
@@ -198,4 +223,14 @@ func main() {
 			fmt.Println("")
 		}
 	}
+}
+
+func main() {
+	buf := make([]byte, 1024*1024)
+	sc.Buffer(buf, bufio.MaxScanTokenSize)
+	sc.Split(bufio.ScanWords)
+
+	h, w := nextInt(), nextInt()
+	//Solve(h, w)
+	SolveCommentary(h, w)
 }
