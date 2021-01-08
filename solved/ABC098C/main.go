@@ -20,6 +20,13 @@ func nextString() string {
 	return sc.Text()
 }
 
+func Min(x, y int) int {
+	if x < y {
+		return x
+	}
+	return y
+}
+
 func Honestly(n int, row string) int {
 	result := n
 	for i := 0; i < n; i++ {
@@ -42,30 +49,31 @@ func Honestly(n int, row string) int {
 	return result
 }
 
-func CumulativeSum(n int, row string) int {
-	// 番兵を持たせる
-	w := make([]int, n+2)
-	e := make([]int, n+2)
-	for i := 0; i < n; i++ {
-		if row[i] == 'W' {
-			w[i+1] = w[i] + 1
-			e[i+1] = e[i]
-		} else if row[i] == 'E' {
-			w[i+1] = w[i]
-			e[i+1] = e[i] + 1
-		} else {
-			w[i+1] = w[i]
-			e[i+1] = e[i]
+func Solve(n int, s string) int {
+	se := make([]int, n+2) // Eの累積和
+	sw := make([]int, n+2) // Wの累積和
+
+	for i := 1; i <= n; i++ {
+		if s[i-1] == 'E' {
+			se[i] = se[i-1] + 1
+			sw[i] = sw[i-1]
+		} else if s[i-1] == 'W' {
+			se[i] = se[i-1]
+			sw[i] = sw[i-1] + 1
 		}
 	}
-	result := n
-	for i := 0; i < n; i++ {
-		count := w[i] + (e[n] - e[i])
-		if result > count {
-			result = count
-		}
+	se[n+1] = se[n]
+	//fmt.Println(se)
+	//fmt.Println(sw)
+	ans := n
+	for i := 1; i <= n; i++ {
+		//リーダーの左側にいるWの数
+		sum := sw[i-1]
+		//リーダーの右側にいるEの数
+		sum += se[n+1] - se[i]
+		ans = Min(ans, sum)
 	}
-	return result
+	return ans
 }
 
 func main() {
@@ -76,6 +84,6 @@ func main() {
 	n := nextInt()
 	row := nextString()
 
-	fmt.Println(CumulativeSum(n, row))
-
+	//fmt.Println(Honestly(n, row))
+	fmt.Println(Solve(n, row))
 }
