@@ -54,7 +54,7 @@ func main() {
 	N := nextInt()
 	a := make([]int, N+1)
 	sum := make([]int, N+1)
-	sign := make([]bool, N+1)
+	//sign := make([]bool, N+1)
 
 	for i := 1; i <= N; i++ {
 		a[i] = nextInt()

@@ -98,7 +98,8 @@ func main() {
 	sc.Buffer(buf, bufio.MaxScanTokenSize)
 	sc.Split(bufio.ScanWords)
 
-	N, W := nextInt(), nextInt()
+	N, _ := nextInt(), nextInt()
+	//N, W := nextInt(), nextInt()
 	A := make([]Item, N)
 	for _, v := range A {
 		v.W = nextInt()
