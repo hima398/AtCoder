@@ -8,6 +8,8 @@ import (
 	"strconv"
 )
 
+const Mod = 1000000007
+
 var sc = bufio.NewScanner(os.Stdin)
 
 func nextInt() int {
@@ -89,25 +91,67 @@ type Pos struct {
 	Y int
 }
 
-// しゃくとり法での解答
-func SolveTwoPointer(N int) int {
-	A := make([]int, N)
-	for i := 0; i < N; i++ {
-		A[i] = nextInt()
-	}
+type UnionFind struct {
+	par  []int // parent numbers
+	rank []int // height of tree
+}
 
-	ans := 0
-	r := 0
-	for l := 0; l < N; l++ {
-		for r < N-1 && (A[r] < A[r+1]) {
-			r++
-		}
-		ans += (r - l + 1)
-		if l == r {
-			r++
+func NewUnionFind(n int) *UnionFind {
+	if n <= 0 {
+		return nil
+	}
+	u := new(UnionFind)
+	// for accessing index without minus 1
+	u.par = make([]int, n+1)
+	u.rank = make([]int, n+1)
+	for i := 0; i <= n; i++ {
+		u.par[i] = i
+		u.rank[i] = 0
+	}
+	return u
+}
+
+func (this *UnionFind) Find(x int) int {
+	if this.par[x] == x {
+		return x
+	} else {
+		// compress path
+		// ex. Find(4)
+		// 1 - 2 - 3 - 4
+		// 1 - 2
+		//  L-3
+		//  L 4
+		this.par[x] = this.Find(this.par[x])
+		return this.par[x]
+	}
+}
+
+func (this *UnionFind) ExistSameUnion(x, y int) bool {
+	return this.Find(x) == this.Find(y)
+}
+
+func (this *UnionFind) Unite(x, y int) {
+	x = this.Find(x)
+	y = this.Find(y)
+	if x == y {
+		return
+	}
+	// raink
+	if this.rank[x] < this.rank[y] {
+		this.par[x] = y
+	} else {
+		// this.rank[x] >= this.rank[y]
+		this.par[y] = x
+		if this.rank[x] == this.rank[y] {
+			this.rank[x]++
 		}
 	}
-	return ans
+}
+
+func PrintUnionFind(u *UnionFind) {
+	// for debuging. not optimize.
+	fmt.Println(u.par)
+	fmt.Println(u.rank)
 }
 
 func main() {
@@ -115,7 +159,8 @@ func main() {
 	sc.Buffer(buf, bufio.MaxScanTokenSize)
 	sc.Split(bufio.ScanWords)
 
-	N := nextInt()
-	//fmt.Println(SolvePrefixSum(N))
-	fmt.Println(SolveTwoPointer(N))
+	n, _ := nextInt(), nextInt()
+	min := -2 * (n - 1)
+	max := -min
+	fmt.Println(min, max)
 }
