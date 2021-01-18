@@ -12,6 +12,13 @@ const Mod = 1000000007
 
 var sc = bufio.NewScanner(os.Stdin)
 
+func main() {
+	buf := make([]byte, 1024*1024)
+	sc.Buffer(buf, bufio.MaxScanTokenSize)
+	sc.Split(bufio.ScanWords)
+
+}
+
 func nextInt() int {
 	sc.Scan()
 	i, _ := strconv.Atoi(sc.Text())
@@ -152,11 +159,4 @@ func PrintUnionFind(u *UnionFind) {
 	// for debuging. not optimize.
 	fmt.Println(u.par)
 	fmt.Println(u.rank)
-}
-
-func main() {
-	buf := make([]byte, 1024*1024)
-	sc.Buffer(buf, bufio.MaxScanTokenSize)
-	sc.Split(bufio.ScanWords)
-
 }
