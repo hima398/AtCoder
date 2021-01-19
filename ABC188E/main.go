@@ -17,12 +17,7 @@ type Item struct {
 	value    int
 }
 
-func main() {
-	buf := make([]byte, 1024*1024)
-	sc.Buffer(buf, bufio.MaxScanTokenSize)
-	sc.Split(bufio.ScanWords)
-
-	n, m := nextInt(), nextInt()
+func Solve(n, m int) int {
 	a := make([]int, n+1)
 	for i := 1; i <= n; i++ {
 		a[i] = nextInt()
@@ -54,7 +49,48 @@ func main() {
 	for k, _ := range r {
 		ans = Max(ans, dp[k].value)
 	}
-	fmt.Println(ans)
+	return ans
+}
+
+func SolveCommentary1(n, m int) int {
+	a := make([]int, n+1)
+	for i := 1; i <= n; i++ {
+		a[i] = nextInt()
+	}
+	//fmt.Println(a)
+	r := make(map[int][]int)
+	for i := 0; i < m; i++ {
+		x, y := nextInt(), nextInt()
+		r[x] = append(r[x], y)
+	}
+	//fmt.Println(r)
+	// dp[i] 街iにたどり着くまでに購入できる最小の金額
+	dp := make([]int, n+1)
+	for i := 1; i <= n; i++ {
+		dp[i] = 1000000001
+	}
+	for i := 1; i <= n; i++ {
+		for _, v := range r[i] {
+			dp[v] = Min(dp[v], dp[i])
+			dp[v] = Min(dp[v], a[i])
+		}
+	}
+	//fmt.Println(dp)
+	ans := -1000000001
+	for i := 1; i <= n; i++ {
+		ans = Max(ans, a[i]-dp[i])
+	}
+	return ans
+}
+
+func main() {
+	buf := make([]byte, 1024*1024)
+	sc.Buffer(buf, bufio.MaxScanTokenSize)
+	sc.Split(bufio.ScanWords)
+
+	n, m := nextInt(), nextInt()
+	//fmt.Println(Solve(n, m))
+	fmt.Println(SolveCommentary1(n, m))
 }
 
 func nextInt() int {
