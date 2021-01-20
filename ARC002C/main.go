@@ -2,21 +2,58 @@ package main
 
 import (
 	"bufio"
-	"errors"
 	"fmt"
 	"os"
 	"strconv"
 )
 
-const Mod = 1000000007
-
 var sc = bufio.NewScanner(os.Stdin)
+
+func Solve(s, l, r string) int {
+	n := len(s)
+	dp := make([]int, n+1)
+	dp[1] = 1
+	for i := 2; i <= n; i++ {
+		dp[i] = i
+	}
+	for i := 2; i <= n; i++ {
+		dp[i] = Min(dp[i], dp[i-1]+1)
+		if s[i-2:i] == l || s[i-2:i] == r {
+			dp[i] = Min(dp[i], dp[i-2]+1)
+		}
+	}
+	return dp[n]
+}
 
 func main() {
 	buf := make([]byte, 1024*1024)
 	sc.Buffer(buf, bufio.MaxScanTokenSize)
 	sc.Split(bufio.ScanWords)
 
+	const button = "ABXY"
+	var ls []string
+	var rs []string
+	for _, l1 := range button {
+		for _, l2 := range button {
+			ls = append(ls, string(l1)+string(l2))
+		}
+	}
+	for _, r1 := range button {
+		for _, r2 := range button {
+			rs = append(rs, string(r1)+string(r2))
+		}
+	}
+
+	n := nextInt()
+	s := nextString()
+
+	ans := n
+	for _, l := range ls {
+		for _, r := range rs {
+			ans = Min(ans, Solve(s, l, r))
+		}
+	}
+	fmt.Println(ans)
 }
 
 func nextInt() int {
@@ -30,133 +67,9 @@ func nextString() string {
 	return sc.Text()
 }
 
-func Abs(x int) int {
-	if x < 0 {
-		return -x
-	}
-	return x
-}
-
 func Min(x, y int) int {
 	if x < y {
 		return x
 	}
 	return y
-}
-
-func Max(x, y int) int {
-	if x < y {
-		return y
-	}
-	return x
-}
-
-func Gcd(x, y int) int {
-	if y == 0 {
-		return x
-	}
-	return Gcd(y, x%y)
-}
-
-func Lcm(x, y int) int {
-	return x * y / Gcd(x, y)
-}
-
-func Permutation(N, K int) int {
-	v := 1
-	if 0 < K && K <= N {
-		for i := 0; i < K; i++ {
-			v *= (N - i)
-		}
-	} else if K > N {
-		v = 0
-	}
-	return v
-}
-
-func Factional(N int) int {
-	return Permutation(N, N-1)
-}
-
-func Combination(N, K int) int {
-	if K == 1 {
-		return N
-	}
-	return Combination(N, K-1) * (N + 1 - K) / K
-}
-
-func DivideSlice(A []int, K int) ([]int, []int, error) {
-
-	if len(A) < K {
-		return nil, nil, errors.New("")
-	}
-	return A[:K+1], A[K:], nil
-}
-
-type Pos struct {
-	X int
-	Y int
-}
-
-type UnionFind struct {
-	par  []int // parent numbers
-	rank []int // height of tree
-}
-
-func NewUnionFind(n int) *UnionFind {
-	if n <= 0 {
-		return nil
-	}
-	u := new(UnionFind)
-	// for accessing index without minus 1
-	u.par = make([]int, n+1)
-	u.rank = make([]int, n+1)
-	for i := 0; i <= n; i++ {
-		u.par[i] = i
-		u.rank[i] = 0
-	}
-	return u
-}
-
-func (this *UnionFind) Find(x int) int {
-	if this.par[x] == x {
-		return x
-	} else {
-		// compress path
-		// ex. Find(4)
-		// 1 - 2 - 3 - 4
-		// 1 - 2
-		//  L-3
-		//  L 4
-		this.par[x] = this.Find(this.par[x])
-		return this.par[x]
-	}
-}
-
-func (this *UnionFind) ExistSameUnion(x, y int) bool {
-	return this.Find(x) == this.Find(y)
-}
-
-func (this *UnionFind) Unite(x, y int) {
-	x = this.Find(x)
-	y = this.Find(y)
-	if x == y {
-		return
-	}
-	// raink
-	if this.rank[x] < this.rank[y] {
-		this.par[x] = y
-	} else {
-		// this.rank[x] >= this.rank[y]
-		this.par[y] = x
-		if this.rank[x] == this.rank[y] {
-			this.rank[x]++
-		}
-	}
-}
-
-func PrintUnionFind(u *UnionFind) {
-	// for debuging. not optimize.
-	fmt.Println(u.par)
-	fmt.Println(u.rank)
 }
