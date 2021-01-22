@@ -12,6 +12,33 @@ const Mod = 1000000007
 
 var sc = bufio.NewScanner(os.Stdin)
 
+type Pos struct {
+	X int
+	Y int
+}
+
+type Stack struct {
+	p []Pos
+}
+
+func NewStack() *Stack {
+	return new(Stack)
+}
+
+func (this *Stack) Push(p Pos) {
+	this.p = append(this.p)
+}
+
+func (this *Stack) Pop() *Pos {
+	n := len(this.p)
+	if n == 0 {
+		return nil
+	}
+	p := this.p[n-1]
+	this.p = this.p[:n-1]
+	return &p
+}
+
 func main() {
 	buf := make([]byte, 1024*1024)
 	sc.Buffer(buf, bufio.MaxScanTokenSize)
