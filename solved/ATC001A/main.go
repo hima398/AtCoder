@@ -10,6 +10,7 @@ import (
 var sc = bufio.NewScanner(os.Stdin)
 
 var dx = []int{1, -1, 0, 0}
+var dy = []int{0, 0, 1, -1}
 
 var b [500][500]bool
 
@@ -38,8 +39,54 @@ func PrintByteField(h, w int) {
 	}
 }
 
-func SolveStack() {
+type Pos struct {
+	X int
+	Y int
+}
 
+type Stack struct {
+	p []Pos
+}
+
+func NewStack() *Stack {
+	return new(Stack)
+}
+
+func (this *Stack) Push(p Pos) {
+	this.p = append(this.p, p)
+}
+
+func (this *Stack) Pop() *Pos {
+	n := len(this.p)
+	if n == 0 {
+		return nil
+	}
+	p := this.p[n-1]
+	this.p = this.p[:n-1]
+	return &p
+}
+
+func SolveStack(f []string, x, y int) {
+
+	stack := NewStack()
+	p := Pos{x, y}
+	stack.Push(p)
+	b[x][y] = true
+	for {
+		p := stack.Pop()
+		b[p.X][p.Y] = true
+		for i := 0; i < 4; i++ {
+			nx := p.X + dx[i]
+			ny := p.Y + dy[i]
+			if nx >= 0 && nx < len(f) && ny >= 0 && ny < len(f[0]) && !b[nx][ny] && f[nx][ny] != '#' {
+				np := Pos{nx, ny}
+				stack.Push(np)
+			}
+		}
+		if len(stack.p) == 0 {
+			break
+		}
+	}
 }
 
 func SolveRecursive(f []string, x, y int) {
@@ -53,11 +100,9 @@ func SolveRecursive(f []string, x, y int) {
 		return
 	}
 	b[x][y] = true
-	SolveRecursive(f, x+1, y)
-	SolveRecursive(f, x-1, y)
-	SolveRecursive(f, x, y+1)
-	SolveRecursive(f, x, y-1)
-
+	for i := 0; i < 4; i++ {
+		SolveRecursive(f, x+dx[i], y+dy[i])
+	}
 }
 
 func main() {
@@ -79,7 +124,8 @@ func main() {
 			}
 		}
 	}
-	SolveRecursive(f, sx, sy)
+	//SolveRecursive(f, sx, sy)
+	SolveStack(f, sx, sy)
 	//PrintByteField(h, w)
 	if b[gx][gy] {
 		fmt.Println("Yes")
