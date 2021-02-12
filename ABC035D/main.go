@@ -9,31 +9,73 @@ import (
 )
 
 const Mod = 1000000007
+const INF = 1 << 60
 
 var sc = bufio.NewScanner(os.Stdin)
+
+type Edge struct {
+	T int //To
+	C int //Cost
+}
+
+type DijkstraNode struct {
+	F    int //From
+	T    int //To
+	C    int //Cost
+	Done bool
+}
+
+func Dijkstra(n int) {
+}
+
+func Solve(n, m, t int) int {
+	a := make([]int, n+1)
+	for i := 0; i < n; i++ {
+		a[i] = nextInt()
+	}
+	r1 := make(map[int][]Edge) // 行き
+	r2 := make(map[int][]Edge) // 帰り
+
+	for i := 0; i < m; i++ {
+		a, b, c := nextInt(), nextInt(), nextInt()
+		r1[a] = append(r1[a], Edge{b, c})
+		r2[b] = append(r2[b], Edge{a, c})
+	}
+
+	d := make([]int, n+1)
+	for i := 0; i <= n; i++ {
+		d[i] = INF
+	}
+	d[1] = 0
+	nodes := make([]DijkstraNode, n+1)
+	for {
+		var nextNode *DijkstraNode
+		nextNode.C = INF
+		for i := 1; i <= n; i++ {
+			if nodes[i].Done || nodes[i].C < 0 {
+				continue
+			}
+			if nodes[i].C < nextNode.C {
+				nextNode = &nodes[i]
+			}
+		}
+		if nextNode.C == INF {
+			// 未確定のノードがないのでループを抜ける
+			break
+		}
+		nextNode.Done = true
+	}
+	ans := 0
+	return ans
+}
 
 func main() {
 	buf := make([]byte, 1024*1024)
 	sc.Buffer(buf, bufio.MaxScanTokenSize)
 	sc.Split(bufio.ScanWords)
 
-	n, _ := nextInt(), nextInt()
-	a := make([]int, n)
-	b := make([]int, n)
-	e := make(map[int]int) // elements
-	for i := 0; i < n; i++ {
-		a[i], b[i] = nextInt(), nextInt()
-		e[a[i]]++
-		e[b[i]]++
-	}
-	fmt.Println(e)
-	for i := 0; i < n; i++ {
-		if e[a[i]] <= 1 && e[b[i]] <= 1 {
-			fmt.Println("No")
-			return
-		}
-	}
-	fmt.Println("Yes")
+	n, m, t := nextInt(), nextInt(), nextInt()
+	fmt.Println(Solve(n, m, t))
 }
 
 func nextInt() int {
@@ -79,6 +121,18 @@ func Lcm(x, y int) int {
 	return x * y / Gcd(x, y)
 }
 
+func Pow(x, y, p int) int {
+	ret := 1
+	for y > 0 {
+		if y%2 == 1 {
+			ret = ret * x % p
+		}
+		y >>= 1
+		x = x * x % p
+	}
+	return ret
+}
+
 func Permutation(N, K int) int {
 	v := 1
 	if 0 < K && K <= N {
@@ -110,9 +164,73 @@ func DivideSlice(A []int, K int) ([]int, []int, error) {
 	return A[:K+1], A[K:], nil
 }
 
+type IntQueue struct {
+	q []int
+}
+
+func NewIntQueue() *IntQueue {
+
+	return new(IntQueue)
+}
+func (this *IntQueue) Push(v int) {
+	this.q = append(this.q, v)
+}
+
+func (this *IntQueue) Pop() (int, error) {
+	if this.Size() == 0 {
+		return -1, errors.New("")
+	}
+	ret := this.q[0]
+	this.q = this.q[1:]
+	return ret, nil
+}
+
+func (this *IntQueue) Size() int {
+	return len(this.q)
+}
+
+func (this *IntQueue) PrintQueue() {
+	fmt.Println(this.q)
+}
+
 type Pos struct {
 	X int
 	Y int
+	D int
+}
+
+type Queue struct {
+	ps []Pos
+}
+
+func NewQueue() *Queue {
+	return new(Queue)
+}
+
+func (this *Queue) Push(p Pos) {
+	this.ps = append(this.ps, p)
+}
+
+func (this *Queue) Pop() *Pos {
+	if len(this.ps) == 0 {
+		return nil
+	}
+	p := this.ps[0]
+	this.ps = this.ps[1:]
+	return &p
+}
+
+func (this *Queue) Find(x, y int) bool {
+	for _, v := range this.ps {
+		if x == v.X && y == v.Y {
+			return true
+		}
+	}
+	return false
+}
+
+func (this *Queue) Size() int {
+	return len(this.ps)
 }
 
 type UnionFind struct {

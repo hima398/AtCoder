@@ -62,6 +62,18 @@ func Lcm(x, y int) int {
 	return x * y / Gcd(x, y)
 }
 
+func Pow(x, y, p int) int {
+	ret := 1
+	for y > 0 {
+		if y%2 == 1 {
+			ret = ret * x % p
+		}
+		y >>= 1
+		x = x * x % p
+	}
+	return ret
+}
+
 func Permutation(N, K int) int {
 	v := 1
 	if 0 < K && K <= N {
@@ -93,9 +105,73 @@ func DivideSlice(A []int, K int) ([]int, []int, error) {
 	return A[:K+1], A[K:], nil
 }
 
+type IntQueue struct {
+	q []int
+}
+
+func NewIntQueue() *IntQueue {
+
+	return new(IntQueue)
+}
+func (this *IntQueue) Push(v int) {
+	this.q = append(this.q, v)
+}
+
+func (this *IntQueue) Pop() (int, error) {
+	if this.Size() == 0 {
+		return -1, errors.New("")
+	}
+	ret := this.q[0]
+	this.q = this.q[1:]
+	return ret, nil
+}
+
+func (this *IntQueue) Size() int {
+	return len(this.q)
+}
+
+func (this *IntQueue) PrintQueue() {
+	fmt.Println(this.q)
+}
+
 type Pos struct {
 	X int
 	Y int
+	D int
+}
+
+type Queue struct {
+	ps []Pos
+}
+
+func NewQueue() *Queue {
+	return new(Queue)
+}
+
+func (this *Queue) Push(p Pos) {
+	this.ps = append(this.ps, p)
+}
+
+func (this *Queue) Pop() *Pos {
+	if len(this.ps) == 0 {
+		return nil
+	}
+	p := this.ps[0]
+	this.ps = this.ps[1:]
+	return &p
+}
+
+func (this *Queue) Find(x, y int) bool {
+	for _, v := range this.ps {
+		if x == v.X && y == v.Y {
+			return true
+		}
+	}
+	return false
+}
+
+func (this *Queue) Size() int {
+	return len(this.ps)
 }
 
 type UnionFind struct {
